@@ -7,6 +7,7 @@ interface WeatherContextProps {
   setWeather: (weather: WeatherType) => void
 }
 
+
 const WeatherContext = createContext<WeatherContextProps | undefined>(undefined)
 
 export const WeatherProvider = ({ children }: { children: ReactNode }) => {
