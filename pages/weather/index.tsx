@@ -1,4 +1,4 @@
-import { CurrentWeather, Header, Search } from "@/components";
+import { CurrentWeather, Header, Search, Forecast } from "@/components";
 import { fetchWeatherData } from "@/services";
 import { WeatherType } from "@/types/weather";
 import { useState } from "react";
@@ -36,6 +36,7 @@ const Weather = () => {
       <Header />
       <Search onSearch={onSearch} />
       <CurrentWeather currentData={weatherData} />
+      <Forecast currentData={weatherData} />
       {JSON.stringify(weatherData)}
     </>
   )

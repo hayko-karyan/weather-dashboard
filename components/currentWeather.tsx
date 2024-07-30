@@ -8,5 +8,3 @@ export const CurrentWeather = ({ currentData }: any) =>
       Wind Speed: {currentData?.data?.windSpeed}
     </p>
   </div>
-
-
