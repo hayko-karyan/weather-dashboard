@@ -5,7 +5,7 @@ interface Props {
 
 const Layout: FC<Props> = ({ children }) => {
   return (
-    <main>
+    <main className="min-h-screen">
       {children}
     </main>
   );
