@@ -13,9 +13,15 @@ export const Search = ({ onSearch }: any) => {
     onSearch({cityName});
   }
 
+  const onKeyDown = (e: any) => {
+    if (e.key == 'Enter') {
+      fetchData();
+    }
+  }
+
   return (
     <div className="p-24 flex justify-center">
-      <input type="text" className="p-2 rounded-md mr-2" value={cityName} onChange={setCity} />
+      <input type="text" className="p-2 rounded-md mr-2" value={cityName} onChange={setCity}  onKeyDown={onKeyDown}/>
       <button className="bg-slate-900 text-white p-2 rounded-md" onClick={fetchData}>
         Search
       </button>
