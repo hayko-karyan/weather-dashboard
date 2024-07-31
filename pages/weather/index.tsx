@@ -24,6 +24,7 @@ const Weather = () => {
             key: cityName, val: {
               data: {
                 temperature: response.main.temp,
+                feelsLike: response.main.feels_like,
                 weatherConditions: response.weather[0].description,
                 humidity: response.main.humidity,
                 windSpeed: response.wind.speed,
