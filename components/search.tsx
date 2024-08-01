@@ -6,7 +6,7 @@ interface SearchProps {
 }
 
 export const Search: FC<SearchProps> = ({ onSearch }) => {
-  const [cityName, setCityName] = useState<string>('yerevan');
+  const [cityName, setCityName] = useState<string>('');
 
   const setCity = (e: string) => {
     const newCityName = e;
@@ -25,7 +25,7 @@ export const Search: FC<SearchProps> = ({ onSearch }) => {
 
   return (
     <div className="p-24 flex justify-center">
-      <input type="text" className="p-2 rounded-md mr-2" value={cityName} onChange={e => setCity(e.target.value)}  onKeyDown={onKeyDown}/>
+      <input type="text" placeholder="City" className="p-2 rounded-md mr-2" value={cityName} onChange={e => setCity(e.target.value)}  onKeyDown={onKeyDown}/>
       <button className="bg-slate-900 text-white p-2 rounded-md" onClick={fetchData}>
         Search
       </button>
