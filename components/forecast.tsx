@@ -1,14 +1,14 @@
 import { format } from 'date-fns';
 
 export const Forecast = ({ currentData }: any) =>
-  <div>
-    <h2 className='text-center'>5-day forecast</h2>
+  <div className="p-20">
+    <h2 className="text-xl font-medium">5-day forecast</h2>
     {currentData.timestamp.map((e: any) => {
       return (
-        <div className='flex justify-center'>
-          <p className='w-32'>{format(e.dt_txt, 'E, LLL d')}</p>
-          <p className='w-32'>{e.weather[0].description}</p>
-          <p className='w-30'>{e.main.temp_min} / {e.main.temp_max}°C</p>
+        <div className='min-w-80 flex justify-between'>
+          <p>{format(e.dt_txt, 'E, LLL d')}</p>
+          <p>{e.main.temp_min} / {e.main.temp_max}°C</p>
+          <p className='text-yellow-600'>{e.weather[0].description}</p>
         </div>)
     })}
   </div>

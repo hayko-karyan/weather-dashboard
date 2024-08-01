@@ -1,5 +1,5 @@
 import { CurrentWeather, Header, Search, Forecast, Loading, Alert } from "@/components";
-import { fetchCurrentData,fetchForecast } from "@/services";
+import { fetchCurrentData, fetchForecast } from "@/services";
 import { useState } from "react";
 const NodeCache = require("node-cache");
 const myCache = new NodeCache();
@@ -15,7 +15,7 @@ const Weather = () => {
     if (!(isCityExist)) {
       setIsSearching(true)
       const response = await fetchCurrentData(cityName);
-      
+
       setIsSearching(false)
       if (response.main) {
         const forecast = await fetchForecast(cityName);
@@ -47,9 +47,9 @@ const Weather = () => {
     <>
       <Header />
       <Search onSearch={onSearch} />
-      {weatherData.city && (isSearching ? <Loading /> : (<><CurrentWeather currentData={weatherData} />
-        <Forecast currentData={weatherData} /> </>))}
-      {showAlert && <Alert setShowAlert={() =>setShowAlert(false)}/>}
+      {weatherData.city && (isSearching ? <Loading /> : (<div className="flex justify-center items-center flex-col sm:flex-row"><CurrentWeather currentData={weatherData} />
+        <Forecast currentData={weatherData} /> </div>))}
+      {showAlert && <Alert setShowAlert={() => setShowAlert(false)} />}
     </>
   )
 }
