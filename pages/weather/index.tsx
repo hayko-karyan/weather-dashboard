@@ -1,15 +1,24 @@
 import { CurrentWeather, Header, Search, Forecast, Loading, Alert } from "@/components";
 import { fetchCurrentData, fetchForecast } from "@/services";
+import { WeatherType } from "@/types/weather";
 import { useState } from "react";
 const NodeCache = require("node-cache");
 const myCache = new NodeCache();
 
 const Weather = () => {
-  const [weatherData, setWeatherData] = useState<any>({});
-  const [isSearching, setIsSearching] = useState<any>(false);
-  const [showAlert, setShowAlert] = useState<any>(false);
+  const [weatherData, setWeatherData] = useState<WeatherType>({
+    city: '',
+    data: {temperature: '', weatherConditions: '', humidity: '', windSpeed: '', feelsLike: ''},
+    timestamp: [],
+  });
+  const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [showAlert, setShowAlert] = useState<boolean>(false);
 
-  const onSearch = async ({ cityName }: any) => {
+  interface onSerachType {
+    cityName: string
+  }
+
+  const onSearch = async ({ cityName }: onSerachType) => {
     const isCityExist = myCache.get(cityName);
 
     if (!(isCityExist)) {

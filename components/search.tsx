@@ -1,11 +1,15 @@
 "use client";
-import { useState } from "react";
+import { FC, KeyboardEventHandler, useState } from "react";
 
-export const Search = ({ onSearch }: any) => {
+interface SearchProps {
+  onSearch: Function;
+}
+
+export const Search: FC<SearchProps> = ({ onSearch }) => {
   const [cityName, setCityName] = useState<string>('yerevan');
 
-  const setCity = (e: any) => {
-    const newCityName = e.target.value;
+  const setCity = (e: string) => {
+    const newCityName = e;
     setCityName(newCityName);
   }
 
@@ -21,7 +25,7 @@ export const Search = ({ onSearch }: any) => {
 
   return (
     <div className="p-24 flex justify-center">
-      <input type="text" className="p-2 rounded-md mr-2" value={cityName} onChange={setCity}  onKeyDown={onKeyDown}/>
+      <input type="text" className="p-2 rounded-md mr-2" value={cityName} onChange={e => setCity(e.target.value)}  onKeyDown={onKeyDown}/>
       <button className="bg-slate-900 text-white p-2 rounded-md" onClick={fetchData}>
         Search
       </button>

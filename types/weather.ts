@@ -1,13 +1,14 @@
 export type WeatherData = {
-  temperature: string,
-  weatherConditions: string,
-  humidity: string,
-  windSpeed: string,
+  temperature: string | number,
+  weatherConditions: string | number,
+  humidity: string | number,
+  windSpeed: string | number,
+  feelsLike: string
 }
 
 export type WeatherType = {
-  [cityName: string]: {
-    data: WeatherData;
-    timestamp: number;
-  }
+  city: string,
+  data: WeatherData,
+  timestamp: [],
 }
+

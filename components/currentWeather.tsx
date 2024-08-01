@@ -1,6 +1,12 @@
+import { FC } from "react";
+import { WeatherType } from "@/types/weather";
 import { format } from "date-fns";
 
-export const CurrentWeather = ({ currentData }: any) =>
+interface CurrentDataProps {
+  currentData: WeatherType
+}
+
+export const CurrentWeather: FC<CurrentDataProps> = ({ currentData }: CurrentDataProps) =>
   <div className="p-20">
     <p className='text-sm text-red-500'>{format(new Date(), 'E, LLL d')}</p>
     <h1 className="text-3xl uppercase">{currentData?.city}</h1>
