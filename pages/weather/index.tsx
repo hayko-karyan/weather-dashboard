@@ -1,5 +1,6 @@
-import { CurrentWeather, Header, Search, Forecast, Loading, Alert } from "@/components";
+import { CurrentWeather, Header, Search, Forecast, Alert, withLoading } from "@/components";
 import { WeatherType } from "@/types/weather";
+import axios from "axios";
 import { useState } from "react";
 
 interface onSerachType {
@@ -18,24 +19,32 @@ const Weather = () => {
 
   const onSearch = async ({ cityName }: onSerachType) => {
     setIsSearching(true)
-    const currentData = await fetch(`/api/weather?city=${cityName}`);
-    const responseFromApi: WeatherType = await currentData.json();
-    debugger
-    setWeatherData(responseFromApi)
-    setIsSearching(false)
-    if (responseFromApi.city) {
+    try {
+      const currentData = await axios.get(`/api/weather?city=${cityName}`);
+      const responseFromApi: WeatherType = currentData.data;
+      setWeatherData(responseFromApi)
+      setIsSearching(false)
       setShowAlert(false);
-      return;
+    } catch (error) {
+      setWeatherData(defaultWeatherData)
+      setShowAlert(true);
+      console.log(error);
     }
-    setShowAlert(true);
   }
+
+  const Content = () => <div className="flex justify-center items-center flex-col sm:flex-row">
+    <CurrentWeather currentData={weatherData} />
+    <Forecast currentData={weatherData} />
+  </div>
+
+  const ContentWithLoading = withLoading(Content);
+
 
   return (
     <>
       <Header />
       <Search onSearch={onSearch} />
-      {weatherData.city && (isSearching ? <Loading /> : (<div className="flex justify-center items-center flex-col sm:flex-row"><CurrentWeather currentData={weatherData} />
-        <Forecast currentData={weatherData} /> </div>))}
+      {weatherData.city && <ContentWithLoading isLoading={isSearching} />}
       {showAlert && <Alert setShowAlert={() => setShowAlert(false)} />}
     </>
   )

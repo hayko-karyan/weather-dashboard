@@ -1,12 +1,13 @@
 import { DailyForecast, ForecastResponse, ListItem } from "@/types/weather";
 import { NextApiRequest, NextApiResponse } from "next";
 import NodeCache from "node-cache";
+import axios from 'axios';
 
 const myCache: any = new NodeCache();
 
 const fetchAndGroupByDay = async (apiUrl: string): Promise<DailyForecast[]> => {
-  const response = await fetch(apiUrl);
-  const data: ForecastResponse = await response.json();
+  const response = await axios.get(apiUrl);
+  const data: ForecastResponse = response.data;
 
   const dailyForecasts: { [date: string]: DailyForecast } = {};
 
@@ -34,45 +35,31 @@ const fetchAndGroupByDay = async (apiUrl: string): Promise<DailyForecast[]> => {
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { city } = req.query;
-  const defaultWeatherData = {
-    city: '',
-    data: { temperature: '', weatherConditions: '', humidity: '', windSpeed: '', feelsLike: '' },
-    timestamp: [],
-  }
-
   try {
-    debugger
     const isCityExist = myCache.get(city);
 
-    let currentData = defaultWeatherData;
-
     if (!(isCityExist)) {
-      console.log('fetching');
       const weatherApiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.NEXT_PUBLIC_API_KEY}&units=metric`;
-      const response = await fetch(weatherApiUrl);
-      const data: ListItem = await response.json();
-      if (data.main) {
-        const forecastApiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${process.env.NEXT_PUBLIC_API_KEY}&units=metric`;
-        const dailyForecasts = await fetchAndGroupByDay(forecastApiUrl);
-        myCache.mset([
-          {
-            key: city, val: {
-              data: {
-                temperature: data.main.temp,
-                feelsLike: data.main.feels_like,
-                weatherConditions: data.weather[0].description,
-                humidity: data.main.humidity,
-                windSpeed: data.wind.speed,
-              },
-              timestamp: dailyForecasts
-            }, ttl: 600
-          },
-        ])
-      } else {
-        return res.status(200).json(currentData);
-      }
+      const response = await axios.get(weatherApiUrl);
+      const data: ListItem = response.data;
+      const forecastApiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${process.env.NEXT_PUBLIC_API_KEY}&units=metric`;
+      const dailyForecasts = await fetchAndGroupByDay(forecastApiUrl);
+      myCache.mset([
+        {
+          key: city, val: {
+            data: {
+              temperature: data.main.temp,
+              feelsLike: data.main.feels_like,
+              weatherConditions: data.weather[0].description,
+              humidity: data.main.humidity,
+              windSpeed: data.wind.speed,
+            },
+            timestamp: dailyForecasts
+          }, ttl: 600
+        },
+      ])
     }
-    currentData = { city: city, ...myCache.get(city) }
+    const currentData = { city: city, ...myCache.get(city) }
     res.status(200).json(currentData);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch weather data' });
