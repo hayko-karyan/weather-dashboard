@@ -1,55 +1,33 @@
 import { CurrentWeather, Header, Search, Forecast, Loading, Alert } from "@/components";
-import { fetchCurrentData, fetchForecast } from "@/services";
 import { WeatherType } from "@/types/weather";
 import { useState } from "react";
-const NodeCache = require("node-cache");
-const myCache = new NodeCache();
+
+interface onSerachType {
+  cityName: string
+}
 
 const Weather = () => {
-  const [weatherData, setWeatherData] = useState<WeatherType>({
+  const defaultWeatherData = {
     city: '',
-    data: {temperature: '', weatherConditions: '', humidity: '', windSpeed: '', feelsLike: ''},
+    data: { temperature: '', weatherConditions: '', humidity: '', windSpeed: '', feelsLike: '' },
     timestamp: [],
-  });
+  }
+  const [weatherData, setWeatherData] = useState<WeatherType>(defaultWeatherData);
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [showAlert, setShowAlert] = useState<boolean>(false);
 
-  interface onSerachType {
-    cityName: string
-  }
-
   const onSearch = async ({ cityName }: onSerachType) => {
-    const isCityExist = myCache.get(cityName);
-
-    if (!(isCityExist)) {
-      setIsSearching(true)
-      const response = await fetchCurrentData(cityName);
-
-      setIsSearching(false)
-      if (response.main) {
-        const forecast = await fetchForecast(cityName);
-        myCache.mset([
-          {
-            key: cityName, val: {
-              data: {
-                temperature: response.main.temp,
-                feelsLike: response.main.feels_like,
-                weatherConditions: response.weather[0].description,
-                humidity: response.main.humidity,
-                windSpeed: response.wind.speed,
-              },
-              timestamp: forecast
-            }, ttl: 600
-          },
-        ])
-      } else {
-        setWeatherData({});
-        setShowAlert(true);
-        return;
-      }
+    setIsSearching(true)
+    const currentData = await fetch(`/api/weather?city=${cityName}`);
+    const responseFromApi: WeatherType = await currentData.json();
+    debugger
+    setWeatherData(responseFromApi)
+    setIsSearching(false)
+    if (responseFromApi.city) {
+      setShowAlert(false);
+      return;
     }
-    setWeatherData({ city: cityName, ...myCache.get(cityName) })
-    setShowAlert(false);
+    setShowAlert(true);
   }
 
   return (

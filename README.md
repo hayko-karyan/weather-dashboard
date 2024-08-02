@@ -1,4 +1,5 @@
 ## Getting Started
+Create env.local file and add env variables.
 
 Run the development server:
 

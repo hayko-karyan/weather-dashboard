@@ -1,5 +1,5 @@
 "use client";
-import { FC, KeyboardEventHandler, useState } from "react";
+import { FC, useState } from "react";
 
 interface SearchProps {
   onSearch: Function;
