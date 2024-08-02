@@ -1,7 +1,7 @@
+import { useState } from "react";
 import { CurrentWeather, Header, Search, Forecast, Alert, withLoading } from "@/components";
 import { WeatherType } from "@/types/weather";
-import axios from "axios";
-import { useState } from "react";
+import axiosInstance from "@/utils/axiosInstance";
 
 interface onSerachType {
   cityName: string
@@ -20,7 +20,7 @@ const Weather = () => {
   const onSearch = async ({ cityName }: onSerachType) => {
     setIsSearching(true)
     try {
-      const currentData = await axios.get(`/api/weather?city=${cityName}`);
+      const currentData = await axiosInstance.get(`/api/weather?city=${cityName}`);
       const responseFromApi: WeatherType = currentData.data;
       setWeatherData(responseFromApi)
       setIsSearching(false)

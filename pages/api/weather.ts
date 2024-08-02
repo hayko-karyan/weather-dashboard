@@ -1,12 +1,12 @@
-import { DailyForecast, ForecastResponse, ListItem } from "@/types/weather";
 import { NextApiRequest, NextApiResponse } from "next";
 import NodeCache from "node-cache";
-import axios from 'axios';
+import { DailyForecast, ForecastResponse, ListItem } from "@/types/weather";
+import axiosInstance from "@/utils/axiosInstance";
 
 const myCache: any = new NodeCache();
 
 const fetchAndGroupByDay = async (apiUrl: string): Promise<DailyForecast[]> => {
-  const response = await axios.get(apiUrl);
+  const response = await axiosInstance.get(apiUrl);
   const data: ForecastResponse = response.data;
 
   const dailyForecasts: { [date: string]: DailyForecast } = {};
@@ -40,7 +40,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     if (!(isCityExist)) {
       const weatherApiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.NEXT_PUBLIC_API_KEY}&units=metric`;
-      const response = await axios.get(weatherApiUrl);
+      const response = await axiosInstance.get(weatherApiUrl);
       const data: ListItem = response.data;
       const forecastApiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${process.env.NEXT_PUBLIC_API_KEY}&units=metric`;
       const dailyForecasts = await fetchAndGroupByDay(forecastApiUrl);
