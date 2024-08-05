@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CurrentWeather, Header, Search, Forecast, withLoading } from "@/components";
 import { WeatherType } from "@/types/weather";
-import axiosInstance from "@/utils/axiosInstance";
+import axiosInstance from "@/utils/axios-instance";
 
 interface onSerachType {
   cityName: string
