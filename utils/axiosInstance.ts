@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 // Create an Axios instance
 const axiosInstance = axios.create();
@@ -11,7 +12,7 @@ axiosInstance.interceptors.request.use(
   },
   (error) => {
     // Handle request error
-    console.error('Request error:', error);
+    toast.error(`Request error: ${error.message}`);
     return Promise.reject(error);
   }
 );
@@ -25,12 +26,9 @@ axiosInstance.interceptors.response.use(
   (error) => {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     if (error.response && (error.response.status >= 400 && error.response.status < 600)) {
-      console.error('Request URL:', error.config.url);
-      console.error('Request Method:', error.config.method);
-      console.error('Status Code:', error.response.status);
-      console.error('Response Data:', error.response.data);
+      toast.error(`Code ${error.response.status}: ${error.response.data.message || error.message}`);
     } else {
-      console.error('Unexpected error:', error);
+      toast.error(`Unexpected error: ${error.message}`);
     }
     return Promise.reject(error);
   }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CurrentWeather, Header, Search, Forecast, Alert, withLoading } from "@/components";
+import { CurrentWeather, Header, Search, Forecast, withLoading } from "@/components";
 import { WeatherType } from "@/types/weather";
 import axiosInstance from "@/utils/axiosInstance";
 
@@ -15,7 +15,6 @@ const Weather = () => {
   }
   const [weatherData, setWeatherData] = useState<WeatherType>(defaultWeatherData);
   const [isSearching, setIsSearching] = useState<boolean>(false);
-  const [showAlert, setShowAlert] = useState<boolean>(false);
 
   const onSearch = async ({ cityName }: onSerachType) => {
     setIsSearching(true)
@@ -24,11 +23,9 @@ const Weather = () => {
       const responseFromApi: WeatherType = currentData.data;
       setWeatherData(responseFromApi)
       setIsSearching(false)
-      setShowAlert(false);
     } catch (error) {
       debugger
       setWeatherData(defaultWeatherData)
-      setShowAlert(true);
       console.log(error);
     }
   }
@@ -46,7 +43,6 @@ const Weather = () => {
       <Header />
       <Search onSearch={onSearch} />
       {weatherData.city && <ContentWithLoading isLoading={isSearching} />}
-      {showAlert && <Alert setShowAlert={() => setShowAlert(false)} />}
     </>
   )
 }

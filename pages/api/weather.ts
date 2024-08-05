@@ -61,8 +61,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
     const currentData = { city: city, ...myCache.get(city) }
     res.status(200).json(currentData);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch weather data' });
+  } catch (error: any) {
+    res.status(500).json({ message: error.response.data.message });
   }
 }
 
