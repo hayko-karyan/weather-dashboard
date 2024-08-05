@@ -26,6 +26,7 @@ const Weather = () => {
       setIsSearching(false)
       setShowAlert(false);
     } catch (error) {
+      debugger
       setWeatherData(defaultWeatherData)
       setShowAlert(true);
       console.log(error);

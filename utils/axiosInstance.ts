@@ -11,7 +11,7 @@ axiosInstance.interceptors.request.use(
   },
   (error) => {
     // Handle request error
-    alert(`Request error: ${error.message}`);
+    console.error('Request error:', error);
     return Promise.reject(error);
   }
 );
@@ -23,10 +23,15 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.log(error);
-    
     // Any status codes that falls outside the range of 2xx cause this function to trigger
-    alert(`Response error: ${error.message}`);
+    if (error.response && (error.response.status >= 400 && error.response.status < 600)) {
+      console.error('Request URL:', error.config.url);
+      console.error('Request Method:', error.config.method);
+      console.error('Status Code:', error.response.status);
+      console.error('Response Data:', error.response.data);
+    } else {
+      console.error('Unexpected error:', error);
+    }
     return Promise.reject(error);
   }
 );
